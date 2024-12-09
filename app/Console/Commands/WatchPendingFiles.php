@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Console\Command;
+
 class WatchPendingFiles extends Command
 {
     protected $signature = 'file-watcher:run';

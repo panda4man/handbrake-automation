@@ -21,6 +21,8 @@ return new class extends Migration
             $table->unsignedInteger('progress')->default(0);
             $table->string('eta')->nullable();
             $table->string('file_type');
+            $table->boolean('active')->default(false);
+            $table->unsignedBigInteger('pid')->nullable();
             $table->timestamps();
         });
     }

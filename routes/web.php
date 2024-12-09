@@ -17,4 +17,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::post('/api/compression/update', [App\Http\Controllers\CompressionController::class, 'update']);
+Route::get('/api/compression/{file_compression}', [App\Http\Controllers\CompressionController::class, 'fetchOutput']);
+
+
+
 require __DIR__.'/auth.php';
