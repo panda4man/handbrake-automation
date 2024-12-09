@@ -39,11 +39,4 @@ class CompressionController
 
         return response()->json(['message' => 'Job updated successfully.']);
     }
-
-    public function show(FileCompression $file_compression): \Illuminate\Http\JsonResponse
-    {
-        $action = new FetchHandbrakeStatus;
-
-        return response()->json($action->handle($file_compression));
-    }
 }

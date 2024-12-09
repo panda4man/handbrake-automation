@@ -13,6 +13,7 @@
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -32,5 +33,14 @@
                 {{ $slot }}
             </main>
         </div>
+
+        <!-- Footer -->
+        <footer class="bg-gray-800 text-white py-4">
+            <div class="container mx-auto px-4 text-center">
+                <p>&copy; 2024 File Compression Dashboard. All rights reserved.</p>
+            </div>
+        </footer>
+
+        @livewireScripts
     </body>
 </html>

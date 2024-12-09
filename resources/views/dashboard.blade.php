@@ -1,17 +1,24 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('File Compression Dashboard') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
-                    {{ __("You're logged in!") }}
-                </div>
+    <!-- Main Content -->
+    <main class="flex-1 container mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Pending Compressions Column -->
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h2 class="text-xl font-semibold mb-4">Pending File Compressions</h2>
+                <livewire:pending-compressions />
+            </div>
+
+            <!-- Current Job Status Column -->
+            <div class="bg-white rounded-lg shadow-md p-4">
+                <h2 class="text-xl font-semibold mb-4">Current Job Status</h2>
+                <livewire:current-compression-status />
             </div>
         </div>
-    </div>
+    </main>
 </x-app-layout>
