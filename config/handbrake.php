@@ -10,6 +10,11 @@ return [
             'disk' => 'local',
             'folder' => 'completed',
         ],
+        'presets' => [
+            'use_json' => true,
+            'disk' => 'local',
+            'folder' => 'presets',
+        ],
         'logs' => [
             'disk' => 'local',
             'folder' => 'compression-logs',

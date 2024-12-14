@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class FileCompression extends Model
 {
-    //
+    protected $guarded = [];
 }

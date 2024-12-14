@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\FileCompression;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 class ProcessFileJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable;
 
     protected FileCompression $file_compression;
 
@@ -37,22 +39,37 @@ class ProcessFileJob implements ShouldQueue
         }
 
         // File paths and script parameters
-        $input_file = Storage::disk('local')->get('pending/'.$this->file_compression->file_type.'/'.$this->file_compression->file_name);
-        $output_file = Storage::disk('local')->get('compressed/'.$this->file_compression->file_name);
+        $input_file = Storage::disk(config('handbrake.io.input.disk'))->path(
+            sprintf('%s/%s/%s',
+                config('handbrake.io.input.folder'), $this->file_compression->file_type, $this->file_compression->file_name
+            )
+        );
+        $output_file = Storage::disk(config('handbrake.io.output.disk'))->path(
+            sprintf('%s/%s', config('handbrake.io.output.folder'), $this->file_compression->file_name)
+        );
         $api_url = route('compression.update');
         $job_id = $this->file_compression->id;
+
+        // Determine the preset JSON file path if use_json is true
+        $preset_json = null;
+        if (config('handbrake.io.presets.use_json')) {
+            $preset_json = Storage::disk(config('handbrake.io.presets.disk'))->path(
+                sprintf('%s/%s.json', config('handbrake.io.presets.folder'), $preset)
+            );
+        }
 
         // Update the job as active
         $this->file_compression->update(['active' => true, 'started_at' => now()]);
 
         // Build the command to capture PID
         $command = implode(' ', [
-            escapeshellcmd(base_path('compress_file.sh')),
+            escapeshellcmd(config('handbrake.script')),
             escapeshellarg($input_file),
             escapeshellarg($output_file),
             escapeshellarg($preset),
             escapeshellarg($api_url),
             escapeshellarg($job_id),
+            escapeshellarg($preset_json), // Pass the preset JSON file path as the 6th argument
             '>/dev/null 2>&1 & echo $!', // Redirect output and print PID
         ]);
 

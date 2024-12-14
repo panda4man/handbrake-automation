@@ -6,19 +6,40 @@ OUTPUT_FILE=$2
 PRESET=$3
 API_URL=$4
 JOB_ID=$5
+PRESET_JSON=$6
 
 # Define a log file for the process output
 LOG_FILE="/Users/aclinton/Dev/Personal/Valet/handbrake-automation/storage/app/private/compression-logs/compression_$JOB_ID.log"
 
-# Run HandBrakeCLI and redirect output to the log file
-HandBrakeCLI -i "$INPUT_FILE" -o "$OUTPUT_FILE" --preset "$PRESET" > "$LOG_FILE" 2>&1 &
+# Build the HandBrakeCLI command
+if [ -n "$PRESET_JSON" ]; then
+    HAND_BRAKE_CMD="HandBrakeCLI -i \"$INPUT_FILE\" -o \"$OUTPUT_FILE\" -Z \"$PRESET\" --preset-import-file \"$PRESET_JSON\""
+else
+    HAND_BRAKE_CMD="HandBrakeCLI -i \"$INPUT_FILE\" -o \"$OUTPUT_FILE\" -Z \"$PRESET\""
+fi
+
+# Run HandBrakeCLI in the background and get its PID
+$HAND_BRAKE_CMD > "$LOG_FILE" 2>&1 &
 PID=$!
 
-# Notify the Laravel API about the process start
+# Print the PID of the HandBrakeCLI process
+echo $PID
+
+# Wait for the HandBrakeCLI process to complete
+wait $PID
+EXIT_STATUS=$?
+
+# Check the exit status of the HandBrakeCLI command
+if [ $EXIT_STATUS -eq 0 ]; then
+    STATUS="success"
+else
+    STATUS="failure"
+fi
+
+# Notify the Laravel API about the process completion
 curl -X POST "$API_URL" \
     -H "Content-Type: application/json" \
     -d '{
         "job_id": '"$JOB_ID"',
-        "status": "running",
-        "pid": '"$PID"'
+        "status": "'"$STATUS"'"
     }'

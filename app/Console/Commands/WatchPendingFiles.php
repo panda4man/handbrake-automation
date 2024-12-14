@@ -18,6 +18,7 @@ class WatchPendingFiles extends Command
     {
         $pending_folders = HandbrakeFolders::pendingFolders();
 
+        // AppServiceProvider should take care of this...but just in case
         foreach ($pending_folders as $folder) {
             if (! file_exists($folder)) {
                 mkdir($folder, 0777, true);
@@ -57,6 +58,8 @@ class WatchPendingFiles extends Command
                     }
 
                     if (! empty($jobs)) {
+                        $this->info('Dispatching '.count($jobs)." jobs for $subfolder");
+
                         // Proper batch dispatching using Laravel Bus
                         Bus::batch($jobs)
                             ->name(basename($subfolder))

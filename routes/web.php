@@ -11,6 +11,6 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::post('/api/compression/update', [App\Http\Controllers\CompressionController::class, 'update']);
+Route::post('/api/compression/update', [App\Http\Controllers\CompressionController::class, 'update'])->name('compression.update');
 
 require __DIR__.'/auth.php';
