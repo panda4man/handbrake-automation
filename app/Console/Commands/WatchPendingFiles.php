@@ -2,30 +2,31 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ProcessFileJob;
+use App\Models\FileCompression;
+use App\Support\HandbrakeFolders;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Bus;
 
 class WatchPendingFiles extends Command
 {
     protected $signature = 'file-watcher:run';
+
     protected $description = 'Watch the pending folders for new files.';
 
     public function handle()
     {
-        $pendingFolders = [
-            storage_path('pending/standard'),
-            storage_path('pending/bluray'),
-            storage_path('pending/bluray_animated'),
-        ];
+        $pending_folders = HandbrakeFolders::pendingFolders();
 
-        foreach ($pendingFolders as $folder) {
-            if (!file_exists($folder)) {
+        foreach ($pending_folders as $folder) {
+            if (! file_exists($folder)) {
                 mkdir($folder, 0777, true);
             }
         }
 
         // Example watcher loop
         while (true) {
-            foreach ($pendingFolders as $folder) {
+            foreach ($pending_folders as $folder) {
                 $subfolders = glob("$folder/*", GLOB_ONLYDIR);
 
                 if (empty($subfolders)) {
@@ -37,31 +38,35 @@ class WatchPendingFiles extends Command
                     $jobs = [];
 
                     foreach ($files as $file) {
-                        $fileName = basename($file);
+                        $file_name = basename($file);
 
                         // Skip if the file already exists in the database
-                        if (FileCompression::where('file_name', $fileName)->exists()) {
+                        if (FileCompression::where('file_name', $file_name)->exists()) {
                             continue;
                         }
 
-                        $fileType = basename($folder);
+                        $file_type = basename($folder);
 
                         $compression = FileCompression::create([
-                            'file_name' => $fileName,
+                            'file_name' => $file_name,
                             'file_size_before' => filesize($file),
-                            'file_type' => $fileType,
+                            'file_type' => $file_type,
                         ]);
 
-                        $jobs[] = new CompressFileJob($compression);
+                        $jobs[] = new ProcessFileJob($compression);
                     }
 
-                    if (!empty($jobs)) {
-                        dispatchBatch($jobs)->name(basename($subfolder));
+                    if (! empty($jobs)) {
+                        // Proper batch dispatching using Laravel Bus
+                        Bus::batch($jobs)
+                            ->name(basename($subfolder))
+                            ->onQueue(config('handbrake.queue')) // Specify queue if necessary
+                            ->dispatch();
                     }
                 }
             }
 
-            sleep(30); // Check every 30 seconds
+            sleep(config('handbrake.watch')); // Check every 60 seconds
         }
     }
 }

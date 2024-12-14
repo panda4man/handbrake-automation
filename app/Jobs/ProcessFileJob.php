@@ -27,19 +27,18 @@ class ProcessFileJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle(): void
     {
+        $preset = config('handbrake.presets')[$this->file_compression->file_type] ?? null;
+
+        if (is_null($preset)) {
+            $this->fail(new \Exception('No preset found for file type: '.$this->file_compression->file_type));
+        }
+
         // File paths and script parameters
         $input_file = Storage::disk('local')->get('pending/'.$this->file_compression->file_type.'/'.$this->file_compression->file_name);
         $output_file = Storage::disk('local')->get('compressed/'.$this->file_compression->file_name);
-        $preset = match ($this->file_compression->file_type) {
-            'standard' => 'Fast 1080p30',
-            'bluray' => 'HQ 1080p30 Surround',
-            'bluray_animated' => 'Animation',
-        };
         $api_url = route('compression.update');
         $job_id = $this->file_compression->id;
 
