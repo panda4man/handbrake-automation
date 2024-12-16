@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\FetchHandbrakeStatus;
 use App\Jobs\ProcessFileJob;
 use App\Models\FileCompression;
 use Illuminate\Http\Request;
@@ -17,10 +16,11 @@ class CompressionController
             'file_size_after' => 'nullable|integer',
         ]);
 
-        $compression = FileCompression::find($request->job_id);
+        $compression = FileCompression::findOrFail($request->job_id);
 
         $compression->update([
             'failed_at' => $request->status === 'failure' ? now() : null,
+            'completed_at' => $request->status === 'success' ? now() : null,
             'file_size_after' => $request->file_size_after,
             'active' => false, // Mark the current job as inactive
         ]);

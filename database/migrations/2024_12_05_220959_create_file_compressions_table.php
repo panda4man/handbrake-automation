@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('file_size_after')->nullable();
             $table->timestamp('started_at')->nullable();
             $table->timestamp('failed_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
             $table->unsignedInteger('progress')->default(0);
             $table->string('eta')->nullable();
             $table->string('file_type');

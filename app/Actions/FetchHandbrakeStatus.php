@@ -49,7 +49,9 @@ class FetchHandbrakeStatus
         }
 
         // Check the log file for progress and ETA
-        $log_file = Storage::disk('local')->get("compression-logs/compression_{$file_compression->id}.log");
+        $log_file = Storage::disk(config('handbrake.logs.disk'))->path(
+            sprintf('%s/compression_%d.log', config('handbrake.logs.folder'), $file_compression->id)
+        );
 
         if (file_exists($log_file)) {
             $log_contents = file_get_contents($log_file);
