@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 
 class BuildCompressScript extends Command
@@ -33,6 +34,10 @@ class BuildCompressScript extends Command
             Storage::disk(config('handbrake.io.logs.disk'))->path(config('handbrake.io.logs.folder')),
             $content
         );
+
+        $process = Process::run('which HandBrakeCLI');
+        $handbrakeCliPath = trim($process->output());
+        $content = str_replace('{{HANDBRAKECLI}}', $handbrakeCliPath, $content);
 
         file_put_contents(config('handbrake.script'), $content);
 

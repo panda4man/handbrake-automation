@@ -49,16 +49,42 @@ class FetchHandbrakeStatus
         }
 
         // Check the log file for progress and ETA
-        $log_file = Storage::disk(config('handbrake.logs.disk'))->path(
-            sprintf('%s/compression_%d.log', config('handbrake.logs.folder'), $file_compression->id)
+        $log_file = Storage::disk(config('handbrake.io.logs.disk'))->path(
+            sprintf('%s/compression_%d.log', config('handbrake.io.logs.folder'), $file_compression->id)
         );
 
         if (file_exists($log_file)) {
-            $log_contents = file_get_contents($log_file);
+            $handle = fopen($log_file, 'r');
+            $last_line = '';
+
+            if ($handle) {
+                fseek($handle, -1, SEEK_END);
+
+                while (ftell($handle) > 0) {
+                    $char = fgetc($handle);
+                    if ($char === "\n" && $last_line !== '') {
+                        break;
+                    }
+                    $last_line = $char . $last_line;
+                    fseek($handle, -2, SEEK_CUR);
+                }
+
+                // Handle the case where the file has only one line without a newline character at the end
+                if (ftell($handle) == 0) {
+                    rewind($handle);
+                    $last_line = fgets($handle);
+                }
+
+                fclose($handle);
+            }
+
+            // Ensure we only take the last line
+            $lines = explode("\n", $last_line);
+            $last_line = end($lines);
 
             // Extract progress and ETA using regex
-            if (preg_match('/Encoding:.*?([0-9]+\.[0-9]+)%.*ETA ([0-9:]+)/', $log_contents, $matches)) {
-                $status_data['progress'] = $matches[1].'%';
+            if (preg_match('/Encoding:.*?([0-9]+\.[0-9]+) %.*ETA ([0-9hms]+)/', $last_line, $matches)) {
+                $status_data['progress'] = $matches[1] . '%';
                 $status_data['eta'] = $matches[2];
             }
         }

@@ -1,4 +1,4 @@
-<div wire:poll.10s="updateCompressionStatus">
+<div wire:poll.5s="updateCompressionStatus">
     @if ($current_status)
         <div class="p-4 bg-blue-100 rounded shadow">
             <p><strong>Progress:</strong> {{ $current_status['progress'] ?? 'N/A' }}</p>

@@ -12,18 +12,25 @@ PRESET_JSON=$6
 LOG_FILE="{{PATH}}/compression_$JOB_ID.log"
 
 # Build the HandBrakeCLI command
+# Run HandBrakeCLI
 if [ -n "$PRESET_JSON" ]; then
-    HAND_BRAKE_CMD="HandBrakeCLI -i \"$INPUT_FILE\" -o \"$OUTPUT_FILE\" -Z \"$PRESET\" --preset-import-file \"$PRESET_JSON\""
+    {{HANDBRAKECLI}} \
+        -i "$INPUT_FILE" \
+        -o "$OUTPUT_FILE" \
+        --preset-import-file "$PRESET_JSON" \
+        -Z "$PRESET" \
+        --encoder x264 >> "$LOG_FILE" 2>&1 &
 else
-    HAND_BRAKE_CMD="HandBrakeCLI -i \"$INPUT_FILE\" -o \"$OUTPUT_FILE\" -Z \"$PRESET\""
+    {{HANDBRAKECLI}} \
+        -i "$INPUT_FILE" \
+        -o "$OUTPUT_FILE" \
+        -Z "$PRESET" \
+        --encoder x264 >> "$LOG_FILE" 2>&1 &
 fi
 
 # Run HandBrakeCLI in the background and get its PID
 $HAND_BRAKE_CMD > "$LOG_FILE" 2>&1 &
 PID=$!
-
-# Print the PID of the HandBrakeCLI process
-echo $PID
 
 # Wait for the HandBrakeCLI process to complete
 wait $PID
