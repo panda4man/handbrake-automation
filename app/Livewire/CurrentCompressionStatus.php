@@ -19,10 +19,7 @@ class CurrentCompressionStatus extends Component
 
     public function fetchCurrentCompression(): void
     {
-        $this->active_compression = FileCompression::whereNotNull('started_at')
-            ->whereNull('failed_at')
-            ->whereNull('file_size_after')
-            ->first();
+        $this->active_compression = FileCompression::where('active', 1)->first();
 
         if ($this->active_compression) {
             $this->updateCompressionStatus();

@@ -49,38 +49,22 @@ class FetchHandbrakeStatus
         }
 
         // Check the log file for progress and ETA
-        $log_file = Storage::disk(config('handbrake.io.logs.disk'))->path(
-            sprintf('%s/compression_%d.log', config('handbrake.io.logs.folder'), $file_compression->id)
-        );
 
-        if (file_exists($log_file)) {
-            $handle = fopen($log_file, 'r');
+        if (file_exists($file_compression->log_file)) {
+            // Use the `tail` command to get the last part of the file
+            $output = shell_exec("tail -n 1 " . escapeshellarg($file_compression->log_file));
+
+            // Split the output by `\r` to get individual lines
+            $lines = explode("\r", $output);
+
+            // Get the last non-empty line
             $last_line = '';
-
-            if ($handle) {
-                fseek($handle, -1, SEEK_END);
-
-                while (ftell($handle) > 0) {
-                    $char = fgetc($handle);
-                    if ($char === "\n" && $last_line !== '') {
-                        break;
-                    }
-                    $last_line = $char . $last_line;
-                    fseek($handle, -2, SEEK_CUR);
+            for ($i = count($lines) - 1; $i >= 0; $i--) {
+                if (trim($lines[$i]) !== '') {
+                    $last_line = $lines[$i];
+                    break;
                 }
-
-                // Handle the case where the file has only one line without a newline character at the end
-                if (ftell($handle) == 0) {
-                    rewind($handle);
-                    $last_line = fgets($handle);
-                }
-
-                fclose($handle);
             }
-
-            // Ensure we only take the last line
-            $lines = explode("\n", $last_line);
-            $last_line = end($lines);
 
             // Extract progress and ETA using regex
             if (preg_match('/Encoding:.*?([0-9]+\.[0-9]+) %.*ETA ([0-9hms]+)/', $last_line, $matches)) {

@@ -12,7 +12,6 @@ PRESET_JSON=$6
 LOG_FILE="/Users/aclinton/Dev/Personal/Valet/handbrake-automation/storage/app/private/compression-logs/compression_$JOB_ID.log"
 
 # Build the HandBrakeCLI command
-# Run HandBrakeCLI
 if [ -n "$PRESET_JSON" ]; then
     /opt/homebrew/bin/HandBrakeCLI \
         -i "$INPUT_FILE" \
@@ -28,8 +27,7 @@ else
         --encoder x264 >> "$LOG_FILE" 2>&1 &
 fi
 
-# Run HandBrakeCLI in the background and get its PID
-$HAND_BRAKE_CMD > "$LOG_FILE" 2>&1 &
+# Capture the PID of the HandBrakeCLI process
 PID=$!
 
 # Wait for the HandBrakeCLI process to complete
