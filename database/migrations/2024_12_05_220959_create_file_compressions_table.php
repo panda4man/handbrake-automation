@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('file_compressions', function (Blueprint $table) {
             $table->id();
-            $table->string('file_name');
+            $table->unsignedBigInteger('pid')->nullable();
+            $table->boolean('active')->default(false);
+            $table->string('file_name')->nullable(); //for overriding the relative path if desired
+            $table->string('relative_path')->nullable();
+            $table->string('file_type');
             $table->unsignedBigInteger('file_size_before')->nullable();
             $table->unsignedBigInteger('file_size_after')->nullable();
             $table->timestamp('started_at')->nullable();
@@ -21,9 +25,9 @@ return new class extends Migration
             $table->timestamp('completed_at')->nullable();
             $table->unsignedInteger('progress')->default(0);
             $table->string('eta')->nullable();
-            $table->string('file_type');
-            $table->boolean('active')->default(false);
-            $table->unsignedBigInteger('pid')->nullable();
+            $table->float('average_cpu_usage', 5, 2)->nullable();
+            $table->float('average_memory_usage', 5, 2)->nullable();
+            $table->string('total_elapsed_time')->nullable();
             $table->timestamps();
         });
     }

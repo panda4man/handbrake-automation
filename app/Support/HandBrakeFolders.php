@@ -4,7 +4,7 @@ namespace App\Support;
 
 use Illuminate\Support\Facades\Storage;
 
-class HandbrakeFolders
+class HandBrakeFolders
 {
     public static function pendingFolders(): array
     {

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\ProcessFileJob;
+use App\Actions\CompressFile;
 use App\Models\FileCompression;
 use Illuminate\Http\Request;
 
@@ -12,31 +12,37 @@ class CompressionController
     {
         $request->validate([
             'job_id' => 'required|exists:file_compressions,id',
-            'status' => 'required|in:success,failure',
+            'status' => 'required|in:success,failure,processing',
+            'pid' => 'nullable|integer',
             'file_size_after' => 'nullable|integer',
         ]);
 
+        /** @var FileCompression $compression */
         $compression = FileCompression::findOrFail($request->job_id);
 
-        $compression->update([
-            'failed_at' => $request->status === 'failure' ? now() : null,
-            'completed_at' => $request->status === 'success' ? now() : null,
-            'file_size_after' => $request->file_size_after,
-            'active' => false, // Mark the current job as inactive
-        ]);
+        if($request->status === 'processing') {
+            $compression->update(['pid' => $request->pid]);
 
-        // Trigger the next job in the queue
-        $nextJob = FileCompression::where('active', false)
-            ->whereNull('failed_at') // Ensure the job isn't failed
-            ->whereNull('file_size_after') // Ensure it's not completed
-            ->where('id', '<>', $compression->id) // Ensure it's not the current job
-            ->first();
+            return response()->json(['message' => 'Job updated successfully.']);
+        } else {
+            $compression->update([
+                'failed_at' => $request->status === 'failure' ? now() : null,
+                'completed_at' => $request->status === 'success' ? now() : null,
+                'file_size_after' => $request->status === 'success' ? $request->file_size_after : null,
+                'active' => false, // Mark the current job as inactive
+            ]);
 
-        if ($nextJob) {
-            $nextJob->update(['active' => true]); // Mark the job as active
-            ProcessFileJob::dispatch($nextJob);
+            // Trigger the next job in the queue
+            $next_job = FileCompression::pending()
+                                      ->where('id', '<>', $compression->id) // Ensure it's not the current job
+                                      ->first();
+
+            if ($next_job) {
+                $next_job->update(['active' => true]); // Mark the job as active
+                (new CompressFile)->handle($next_job);
+            }
+
+            return response()->json(['message' => 'Job updated successfully.']);
         }
-
-        return response()->json(['message' => 'Job updated successfully.']);
     }
 }
