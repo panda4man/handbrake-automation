@@ -1,4 +1,4 @@
-<div wire:poll.5s="updateCompressionStatus">
+<div wire:poll.3s="fetchCurrentCompression">
     @if ($current_status)
         <div class="p-4 bg-blue-100 rounded shadow">
             <p><strong>File:</strong> {{ $active_compression['file_name'] ?? 'N/A' }}</p>

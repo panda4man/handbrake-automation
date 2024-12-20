@@ -9,7 +9,6 @@ use Livewire\Component;
 class CurrentCompressionStatus extends Component
 {
     public $current_status = [];
-
     public $active_compression = null;
 
     public function mount(): void
@@ -19,10 +18,14 @@ class CurrentCompressionStatus extends Component
 
     public function fetchCurrentCompression(): void
     {
-        $this->active_compression = FileCompression::where('active', 1)->first();
+        $new_active_compression = FileCompression::where('active', 1)->first();
 
-        if ($this->active_compression) {
+        if ($new_active_compression && (!$this->active_compression || $new_active_compression->id !== $this->active_compression->id)) {
+            $this->active_compression = $new_active_compression;
             $this->updateCompressionStatus();
+        } elseif (!$new_active_compression) {
+            $this->active_compression = null;
+            $this->current_status = [];
         }
     }
 

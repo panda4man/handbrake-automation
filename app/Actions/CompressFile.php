@@ -53,6 +53,15 @@ class CompressFile
 
         $command[] = '> /dev/null 2>&1 &';
 
+        // make sure that the parent directory for $file_compression->output_file exists
+        $output_dir = dirname($file_compression->output_file);
+
+        if (!is_dir($output_dir)) {
+            mkdir($output_dir, 0755, true);
+        }
+
+        Log::info(implode(' ', $command));
+
         try {
             // Execute the command in the background
             Process::run(implode(' ', $command));

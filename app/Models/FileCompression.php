@@ -101,4 +101,20 @@ class FileCompression extends Model
                      ->whereNull('started_at')
                      ->whereNull('completed_at');
     }
+
+    public function scopeFailed(Builder $query): Builder
+    {
+        return $query->whereNotNull('failed_at');
+    }
+
+    /* ----- Helpers ----- */
+    public function retry(): void
+    {
+        $this->update([
+            'pid' => null,
+            'failed_at' => null,
+            'started_at' => null,
+            'completed_at' => null,
+        ]);
+    }
 }

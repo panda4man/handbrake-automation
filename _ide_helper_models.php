@@ -40,6 +40,7 @@ namespace App\Models{
  * @property-read mixed $preset_file
  * @property-read mixed $requested_audio_tracks
  * @property-read mixed $requests_audio_tracks
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression failed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression pending()

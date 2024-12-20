@@ -118,7 +118,7 @@ class HandBrakeAudio
     {
         $audio_tracks = self::fetchAudioTracks($file_compression);
         $subtitle_track = self::fetchSubtitleTrack($file_compression);
-        
+
         $args = [
             '-a' => [],
             '--aencoder' => [],
@@ -126,6 +126,11 @@ class HandBrakeAudio
             '--mixdown' => [],
             '--arate' => [],
         ];
+
+        if($subtitle_track) {
+            $args['--subtitle'][] = $subtitle_track->track_number;
+            $args['--subname'][] = escapeshellarg($subtitle_track->language);
+        }
 
         foreach ($audio_tracks as $track) {
             // Pass-through audio stream

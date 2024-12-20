@@ -16,9 +16,7 @@ class PendingCompressions extends Component
 
     public function fetchPendingCompressions(): void
     {
-        $this->pending_compressions = FileCompression::whereNull('started_at')
-            ->orderBy('created_at', 'asc')
-            ->get();
+        $this->pending_compressions = FileCompression::pending()->get();
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
