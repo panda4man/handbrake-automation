@@ -18,7 +18,7 @@
                         <strong>Original Size:</strong> {{ number_format($compression->file_size_before / 1048576, 2) }} MB
                     </div>
                     <div>
-                        <strong>Compressed Size:</strong> {{ $compression->file_size_after }} MB
+                        <strong>Compressed Size:</strong> {{ number_format($compression->file_size_after / 1048576, 2) }} MB
                     </div>
                     <div>
                         <strong>Compression Ratio:</strong> {{ $compression->compression_ratio }}%

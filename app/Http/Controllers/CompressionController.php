@@ -14,7 +14,6 @@ class CompressionController
             'job_id' => 'required|exists:file_compressions,id',
             'status' => 'required|in:success,failure,processing',
             'pid' => 'nullable|integer',
-            'file_size_after' => 'nullable|integer',
         ]);
 
         /** @var FileCompression $compression */
@@ -25,11 +24,9 @@ class CompressionController
 
             return response()->json(['message' => 'Job updated successfully.']);
         } else {
-            info(json_encode($request->all()));
             $compression->update([
                 'failed_at' => $request->status === 'failure' ? now() : null,
                 'completed_at' => $request->status === 'success' ? now() : null,
-                'file_size_after' => $request->status === 'success' ? $request->file_size_after : null,
                 'active' => false, // Mark the current job as inactive
             ]);
 

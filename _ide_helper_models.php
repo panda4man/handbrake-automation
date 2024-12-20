@@ -40,6 +40,7 @@ namespace App\Models{
  * @property-read mixed $output_file
  * @property-read mixed $preset
  * @property-read mixed $preset_file
+ * @property-read mixed $relative_output_path
  * @property-read mixed $requested_audio_tracks
  * @property-read mixed $requests_audio_tracks
  * @property-read mixed $title

@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use App\Support\HandBrakeAudio;
+use App\Support\HandBrakeFiles;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -20,34 +21,43 @@ class FileCompression extends Model
         'failed_at' => 'datetime',
     ];
 
+    protected static function booted(): void
+    {
+        static::saving(function (FileCompression $file_compression) {
+            if (empty($file_compression->file_size_after)
+                && $file_compression->isDirty('completed_at')
+                && $file_compression->completed_at !== null) {
+
+                $output_file_path = $file_compression->relative_output_path;
+
+                if (Storage::disk(config('handbrake.io.output.disk'))->exists($output_file_path)) {
+                    $fileSize = Storage::disk(config('handbrake.io.output.disk'))->size($output_file_path);
+                    $file_compression->update(['file_size_after' => $fileSize]);
+                }
+            }
+        });
+    }
+
     /* ------- Accessors --------- */
 
     protected function title(): Attribute
     {
         return Attribute::get(function () {
-            $clean_name = preg_replace('/-s\d{2}e\d{2}(\.\w+)?$/', '', $this->clean_file_name);
-
-            if (preg_match('/-s(\d{2})e(\d{2})/', $this->file_name, $matches)) {
-                $season = $matches[1];
-                $episode = $matches[2];
-                return sprintf('%s - Season %s Episode %s', $clean_name, $season, $episode);
-            }
-
-            return $clean_name;
+            return HandBrakeFiles::titleFromFileName($this);
         });
     }
 
     protected function cleanFileName(): Attribute
     {
         return Attribute::get(function () {
-            return preg_replace('/(--[a-z]{3}(?:-[a-z]{3})*)(?=\.\w+$)/', '', $this->file_name);
+            return HandBrakeFiles::getCleanFileName($this->file_name);
         });
     }
 
     protected function compressionRatio(): Attribute
     {
         return Attribute::get(function () {
-            if (!empty($this->file_size_before)) {
+            if (empty($this->file_size_before)) {
                 return null;
             }
 
@@ -95,11 +105,16 @@ class FileCompression extends Model
     protected function outputFile(): Attribute
     {
         return Attribute::get(function () {
-            $relative_path = preg_replace('/(--[a-z]{3}(?:-[a-z]{3})*)(?=\.\w+$)/', '', $this->relative_path);
-
             return Storage::disk(config('handbrake.io.output.disk'))->path(
-                sprintf('%s/%s', config('handbrake.io.output.folder'), $relative_path)
+                sprintf('%s/%s', config('handbrake.io.output.folder'), HandBrakeFiles::getCleanFileName($this->relative_path))
             );
+        });
+    }
+
+    protected function relativeOutputPath(): Attribute
+    {
+        return Attribute::get(function () {
+            return sprintf('%s/%s', config('handbrake.io.output.folder'), HandBrakeFiles::getCleanFileName($this->relative_path));
         });
     }
 
