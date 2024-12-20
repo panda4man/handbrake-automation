@@ -5,7 +5,6 @@ namespace App\Support;
 use App\HandBrake\Data\AudioTrack;
 use App\HandBrake\Data\SubtitleTrack;
 use App\Models\FileCompression;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Process;
 
 class HandBrakeOutputParser
@@ -22,8 +21,6 @@ class HandBrakeOutputParser
         }
 
         $output = $process->output();
-        Log::debug('HandBrakeCLI --scan output: ' . $output);
-
         $lines = explode("\n", $output);
         $tracks = [
             'audio_tracks' => [],

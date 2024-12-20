@@ -20,10 +20,10 @@ class CurrentCompressionStatus extends Component
     {
         $new_active_compression = FileCompression::where('active', 1)->first();
 
-        if ($new_active_compression && (!$this->active_compression || $new_active_compression->id !== $this->active_compression->id)) {
+        if ($new_active_compression) {
             $this->active_compression = $new_active_compression;
             $this->updateCompressionStatus();
-        } elseif (!$new_active_compression) {
+        } else {
             $this->active_compression = null;
             $this->current_status = [];
         }

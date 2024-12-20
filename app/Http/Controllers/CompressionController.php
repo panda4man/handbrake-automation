@@ -25,6 +25,7 @@ class CompressionController
 
             return response()->json(['message' => 'Job updated successfully.']);
         } else {
+            info(json_encode($request->all()));
             $compression->update([
                 'failed_at' => $request->status === 'failure' ? now() : null,
                 'completed_at' => $request->status === 'success' ? now() : null,

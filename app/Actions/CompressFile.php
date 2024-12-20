@@ -60,11 +60,13 @@ class CompressFile
             mkdir($output_dir, 0755, true);
         }
 
-        Log::info(implode(' ', $command));
+        $final_command = implode(' ', $command);
+
+        $file_compression->update(['cli_command' => $final_command]);
 
         try {
             // Execute the command in the background
-            Process::run(implode(' ', $command));
+            Process::run($final_command);
 
             Log::info("Compression script sent to background for file: {$file_compression->file_name}");
         } catch (\Throwable $e) {

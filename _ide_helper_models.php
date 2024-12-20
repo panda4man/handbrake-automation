@@ -30,7 +30,7 @@ namespace App\Models{
  * @property string|null $eta
  * @property float|null $average_cpu_usage
  * @property float|null $average_memory_usage
- * @property string|null $total_elapsed_time
+ * @property string|null $cli_command
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read mixed $input_file
@@ -40,6 +40,7 @@ namespace App\Models{
  * @property-read mixed $preset_file
  * @property-read mixed $requested_audio_tracks
  * @property-read mixed $requests_audio_tracks
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression completed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression failed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression newQuery()
@@ -48,6 +49,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereAverageCpuUsage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereAverageMemoryUsage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereCliCommand($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereCompletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereEta($value)
@@ -61,7 +63,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereProgress($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereRelativePath($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereStartedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereTotalElapsedTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression whereUpdatedAt($value)
  */
 	class FileCompression extends \Eloquent {}

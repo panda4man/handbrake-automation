@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('eta')->nullable();
             $table->float('average_cpu_usage', 5, 2)->nullable();
             $table->float('average_memory_usage', 5, 2)->nullable();
-            $table->string('total_elapsed_time')->nullable();
+            $table->text('cli_command')->nullable();
             $table->timestamps();
         });
     }

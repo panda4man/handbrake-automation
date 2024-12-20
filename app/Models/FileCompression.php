@@ -15,9 +15,23 @@ class FileCompression extends Model
 
     protected $casts = [
         'active' => 'boolean',
+        'started_at' => 'datetime',
+        'completed_at' => 'datetime',
+        'failed_at' => 'datetime',
     ];
 
     /* ------- Accessors --------- */
+
+    protected function compressionRatio(): Attribute
+    {
+        return Attribute::get(function () {
+            if (!empty($this->file_size_before)) {
+                return null;
+            }
+
+            return number_format(($this->file_size_after / $this->file_size_before) * 100, 2);
+        });
+    }
 
     /**
      * Log file path accessor.
@@ -59,7 +73,7 @@ class FileCompression extends Model
     protected function outputFile(): Attribute
     {
         return Attribute::get(function () {
-            $relative_path = preg_replace('/-eng-jap$/', '', $this->relative_path);
+            $relative_path = preg_replace('/(--[a-z]{3}(?:-[a-z]{3})*)(?=\.\w+$)/', '', $this->relative_path);
 
             return Storage::disk(config('handbrake.io.output.disk'))->path(
                 sprintf('%s/%s', config('handbrake.io.output.folder'), $relative_path)
@@ -95,6 +109,11 @@ class FileCompression extends Model
 
     /* --- Scopes --- */
 
+    public function scopeCompleted(Builder $query): Builder
+    {
+        return $query->whereNotNull('completed_at');
+    }
+
     public function scopePending(Builder $query): Builder
     {
         return $query->where('active', false)
@@ -115,6 +134,7 @@ class FileCompression extends Model
             'failed_at' => null,
             'started_at' => null,
             'completed_at' => null,
+            'cli_command' => null,
         ]);
     }
 }

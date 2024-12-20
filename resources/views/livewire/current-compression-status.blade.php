@@ -1,4 +1,4 @@
-<div wire:poll.3s="fetchCurrentCompression">
+<div wire:poll.750ms="fetchCurrentCompression">
     @if ($current_status)
         <div class="p-4 bg-blue-100 rounded shadow">
             <p><strong>File:</strong> {{ $active_compression['file_name'] ?? 'N/A' }}</p>
@@ -8,6 +8,10 @@
             <p><strong>Elapsed Time:</strong> {{ $current_status['elapsed_time'] ?? 'N/A' }}</p>
             <p><strong>CPU Usage:</strong> {{ $current_status['cpu_usage'] ?? 'N/A' }}</p>
             <p><strong>Memory Usage:</strong> {{ $current_status['memory_usage'] ?? 'N/A' }}</p>
+
+            <div class="mt-4">
+                <pre style="white-space: pre-wrap; word-wrap: break-word;">{{$active_compression['cli_command'] ?? 'N/A'}}</pre>
+            </div>
         </div>
     @else
         <div class="flex items-center space-x-2 p-4 bg-gray-100 rounded shadow">

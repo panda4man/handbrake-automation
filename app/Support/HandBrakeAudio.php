@@ -132,6 +132,7 @@ class HandBrakeAudio
             $args['--subname'][] = escapeshellarg($subtitle_track->language);
         }
 
+        /** @var AudioTrack $track */
         foreach ($audio_tracks as $track) {
             // Pass-through audio stream
             $args['-a'][] = $track->track_number;
@@ -139,6 +140,9 @@ class HandBrakeAudio
             $args['--ab'][] = '640';
             $args['--mixdown'][] = 'none';
             $args['--arate'][] = 'auto';
+            $args['--aname'][] = $track->audio_channel === '2.0'
+                ? escapeshellarg(sprintf("%s (%s)", 'Stereo', $track->audio_encoding))
+                : escapeshellarg(sprintf("%s - %s (%s)", 'Surround', $track->audio_channel, $track->audio_encoding));
 
             // Stereo mixdown audio stream
             $args['-a'][] = $track->track_number;
@@ -146,6 +150,7 @@ class HandBrakeAudio
             $args['--ab'][] = '256';
             $args['--mixdown'][] = 'stereo';
             $args['--arate'][] = 'auto';
+            $args['--aname'][] = escapeshellarg('Stereo');
         }
 
         $cli_args = [];
