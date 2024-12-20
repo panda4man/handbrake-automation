@@ -23,9 +23,9 @@ namespace App\Models{
  * @property string $file_type
  * @property int|null $file_size_before
  * @property int|null $file_size_after
- * @property string|null $started_at
- * @property string|null $failed_at
- * @property string|null $completed_at
+ * @property \Illuminate\Support\Carbon|null $started_at
+ * @property \Illuminate\Support\Carbon|null $failed_at
+ * @property \Illuminate\Support\Carbon|null $completed_at
  * @property int $progress
  * @property string|null $eta
  * @property float|null $average_cpu_usage
@@ -33,6 +33,8 @@ namespace App\Models{
  * @property string|null $cli_command
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $clean_file_name
+ * @property-read mixed $compression_ratio
  * @property-read mixed $input_file
  * @property-read mixed $log_file
  * @property-read mixed $output_file
@@ -40,6 +42,7 @@ namespace App\Models{
  * @property-read mixed $preset_file
  * @property-read mixed $requested_audio_tracks
  * @property-read mixed $requests_audio_tracks
+ * @property-read mixed $title
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression completed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression failed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression newModelQuery()

@@ -22,6 +22,28 @@ class FileCompression extends Model
 
     /* ------- Accessors --------- */
 
+    protected function title(): Attribute
+    {
+        return Attribute::get(function () {
+            $clean_name = preg_replace('/-s\d{2}e\d{2}(\.\w+)?$/', '', $this->clean_file_name);
+
+            if (preg_match('/-s(\d{2})e(\d{2})/', $this->file_name, $matches)) {
+                $season = $matches[1];
+                $episode = $matches[2];
+                return sprintf('%s - Season %s Episode %s', $clean_name, $season, $episode);
+            }
+
+            return $clean_name;
+        });
+    }
+
+    protected function cleanFileName(): Attribute
+    {
+        return Attribute::get(function () {
+            return preg_replace('/(--[a-z]{3}(?:-[a-z]{3})*)(?=\.\w+$)/', '', $this->file_name);
+        });
+    }
+
     protected function compressionRatio(): Attribute
     {
         return Attribute::get(function () {
