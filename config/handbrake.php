@@ -12,11 +12,11 @@ return [
         ],
         'presets' => [
             'use_json' => env('HANDBRAKE_USE_PRESET_JSON', true),
-            'disk' => 'local',
-            'folder' => 'presets',
+            'disk' => env('HANDBRAKE_PRESETS_DISK', 'public'),
+            'folder' => env('HANDBRAKE_PRESETS_FOLDER', 'presets'),
         ],
         'logs' => [
-            'disk' => 'local',
+            'disk' => 'public',
             'folder' => 'compression-logs',
         ],
     ],
