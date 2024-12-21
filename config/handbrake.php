@@ -3,12 +3,12 @@
 return [
     'io' => [
         'input' => [
-            'disk' => 'local',
-            'folder' => 'pending',
+            'disk' => env('HANDBRAKE_INPUT_DISK', 'local'),
+            'folder' => env('HANDBRAKE_INPUT_FOLDER', 'pending'),
         ],
         'output' => [
-            'disk' => 'local',
-            'folder' => 'completed',
+            'disk' => env('HANDBRAKE_OUTPUT_DISK', 'local'),
+            'folder' => env('HANDBRAKE_OUTPUT_FOLDER', 'completed'),
         ],
         'presets' => [
             'use_json' => env('HANDBRAKE_USE_PRESET_JSON', true),
