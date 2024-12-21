@@ -107,7 +107,7 @@
             "VideoMultiPass": true,
             "VideoOptionExtra": "",
             "VideoPreset": "slow",
-            "VideoProfile": "auto",
+            "VideoProfile": "main10",
             "VideoQSVDecode": false,
             "VideoQualitySlider": 18.0,
             "VideoQualityType": 2,
