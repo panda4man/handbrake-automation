@@ -36,8 +36,7 @@ class CompressFile
             '-j', escapeshellarg($file_compression->id),
             '-i', escapeshellarg($input_file),
             '-o', escapeshellarg($output_file),
-            '--title', escapeshellarg($file_compression->title),
-            '--encoder', escapeshellarg('x264'),
+            '--title', escapeshellarg($file_compression->title)
         ];
 
         // Add preset args
