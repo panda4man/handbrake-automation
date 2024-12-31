@@ -6,8 +6,11 @@ ADDITIONAL_ARGS=()
 # Parse arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
+        -i|--input) INPUT_FILE="$2"; shift ;;
+        -o|--output) OUTPUT_FILE="$2"; shift ;;
         -u|--api_url) API_URL="$2"; shift ;;
         -j|--job_id) JOB_ID="$2"; shift ;;
+        -T|--title) TITLE="$2"; shift ;;
         *) ADDITIONAL_ARGS+=("$1") ;; # Collect additional arguments
     esac
     shift
@@ -17,7 +20,7 @@ done
 LOG_FILE="{{PATH}}/compression_$JOB_ID.log"
 
 # Build the HandBrakeCLI command
-{{HANDBRAKECLI}} "${ADDITIONAL_ARGS[@]}" >> "$LOG_FILE" 2>&1 &
+{{HANDBRAKECLI}} -i "$INPUT_FILE" -o "$OUTPUT_FILE" "${ADDITIONAL_ARGS[@]}" >> "$LOG_FILE" 2>&1 &
 
 # Capture the PID of the HandBrakeCLI process
 PID=$!
@@ -36,6 +39,15 @@ curl -X POST "$API_URL" \
 # Wait for the HandBrakeCLI process to complete
 wait $PID
 EXIT_STATUS=$?
+
+if [ -n "$TITLE" ]; then
+    echo "[mkvpropedit] Setting MKV title: $TITLE"
+    mkvpropedit "$OUTPUT_FILE" --edit info --set "title=$TITLE"
+
+    if [ $? -ne 0 ]; then
+        echo "[mkvpropedit] Error: Failed to set the MKV title."
+    fi
+fi
 
 # Determine the file size of the completed output file
 if [ $EXIT_STATUS -eq 0 ]; then
@@ -59,3 +71,5 @@ curl -X POST "$API_URL" \
         "status": "'"$STATUS"'",
         "file_size_after": '"$FILE_SIZE_MB"'
     }' >> "$LOG_FILE" 2>&1
+
+exit $EXIT_STATUS

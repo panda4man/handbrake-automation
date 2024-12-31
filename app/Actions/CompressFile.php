@@ -36,7 +36,7 @@ class CompressFile
             '-j', escapeshellarg($file_compression->id),
             '-i', escapeshellarg($input_file),
             '-o', escapeshellarg($output_file),
-            //'--title', escapeshellarg($file_compression->title) //this needs to be done in ffmpeg apparently.
+            '--title', escapeshellarg($file_compression->title) //this needs to be done in ffmpeg apparently.
         ];
 
         // Add preset args
