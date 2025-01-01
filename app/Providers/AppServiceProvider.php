@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->makePendingFolders();
         $this->makeOutputFolder();
+        $this->makeLogFolder();
     }
 
     private function makePendingFolders(): void
@@ -42,6 +43,16 @@ class AppServiceProvider extends ServiceProvider
     {
         $disk = config('handbrake.io.output.disk');
         $folder = config('handbrake.io.output.folder');
+
+        if (! Storage::disk($disk)->exists($folder)) {
+            Storage::disk($disk)->makeDirectory($folder);
+        }
+    }
+
+    private function makeLogFolder(): void
+    {
+        $disk = config('handbrake.io.logs.disk');
+        $folder = config('handbrake.io.logs.folder');
 
         if (! Storage::disk($disk)->exists($folder)) {
             Storage::disk($disk)->makeDirectory($folder);
