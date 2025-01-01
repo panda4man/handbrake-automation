@@ -35,12 +35,16 @@ class CompressionController
                                       ->where('id', '<>', $compression->id) // Ensure it's not the current job
                                       ->first();
 
+            $message = "Job updated successfully.";
+
             if ($next_job) {
                 $next_job->update(['active' => true]); // Mark the job as active
                 (new CompressFile)->handle($next_job);
+
+                $message .= " Kicked off a new job.";
             }
 
-            return response()->json(['message' => 'Job updated successfully.']);
+            return response()->json(['message' => $message]);
         }
     }
 }
