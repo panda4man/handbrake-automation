@@ -3,6 +3,7 @@
 
 namespace App\Models;
 
+use App\Actions\CompressFile;
 use App\Support\HandBrakeAudio;
 use App\Support\HandBrakeFiles;
 use Illuminate\Database\Eloquent\Builder;
@@ -173,5 +174,14 @@ class FileCompression extends Model
             'completed_at' => null,
             'cli_command' => null,
         ]);
+    }
+
+    public function compress(): void
+    {
+        $this->update([
+            'active' => true,
+        ]);
+
+        (new CompressFile)->handle($this);
     }
 }

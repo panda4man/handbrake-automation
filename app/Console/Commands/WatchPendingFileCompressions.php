@@ -34,10 +34,7 @@ class WatchPendingFileCompressions extends Command
         }
 
         // Mark the compression as active
-        $pending_compression->update(['active' => true]);
-
-        // Trigger the compression using the CompressFile action
-        (new CompressFile)->handle($pending_compression);
+        $pending_compression->compress();
 
         $this->info('Started compression for: ' . $pending_compression->file_name);
 

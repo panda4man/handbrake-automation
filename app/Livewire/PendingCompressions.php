@@ -2,7 +2,6 @@
 
 namespace App\Livewire;
 
-use App\Actions\CompressFile;
 use App\Models\FileCompression;
 use Livewire\Component;
 
@@ -20,13 +19,13 @@ class PendingCompressions extends Component
         $this->pending_compressions = FileCompression::pending()->get();
     }
 
-    public function startNextCompression()
+    public function startNextCompression(): void
     {
         // Trigger the CLI watcher for the next pending compression
         $compression = FileCompression::pending()->first();
 
         if ($compression) {
-            (new CompressFile)->handle($compression);
+            $compression->compress();
 
             session()->flash('info', 'Watcher started for pending compressions.');
         } else {
