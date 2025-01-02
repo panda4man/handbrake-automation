@@ -16,7 +16,6 @@
 
             <!-- Pending Compressions Column -->
             <div class="col-span-1 bg-white rounded-lg shadow-md p-4">
-                <h2 class="text-xl font-semibold mb-4">Pending File Compressions</h2>
                 <livewire:pending-compressions />
             </div>
 

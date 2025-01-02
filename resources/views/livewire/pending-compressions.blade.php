@@ -1,4 +1,14 @@
 <div wire:poll.3s="fetchPendingCompressions">
+    <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold mb-4">Pending File Compressions</h2>
+        <button
+            class="btn btn-primary btn-sm"
+            wire:click="startNextCompression"
+        >
+            Start Next Compression
+        </button>
+    </div>
+
     @if ($pending_compressions->isEmpty())
         <div class="flex items-center space-x-2 p-4 bg-gray-100 rounded shadow">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
