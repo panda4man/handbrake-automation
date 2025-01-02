@@ -59,5 +59,6 @@ return [
         'bluray-standard-1080p' => 'Bluray-Standard-1080p',
         'bluray-anime-ghibli-1080p' => 'Bluray-Anime-Ghibli-1080p',
         'bluray-anime-action-1080p' => 'Bluray-Anime-Action-1080p',
+        'dvd-standard' => 'DVD-Standard'
     ],
 ];
