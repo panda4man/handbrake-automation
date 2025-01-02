@@ -1,6 +1,7 @@
 <div wire:poll.3s="fetchPendingCompressions">
     <div class="flex items-center justify-between">
-        <h2 class="text-xl font-semibold mb-4">Pending File Compressions</h2>
+        <h2 class="text-xl font-bold mb-4">Pending File Compressions</h2>
+
         <button
             class="btn btn-primary btn-sm"
             wire:click="startNextCompression"

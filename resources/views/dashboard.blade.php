@@ -21,7 +21,6 @@
 
             <!-- Completed Compressions Column -->
             <div class="col-span-1 bg-white rounded-lg shadow-md p-4">
-                <h2 class="text-xl font-semibold mb-4">Completed Compressions</h2>
                 <livewire:completed-compressions />
             </div>
 

@@ -1,4 +1,6 @@
 <div wire:poll.3s="fetchCompletedCompressions">
+    <h2 class="text-xl font-bold mb-4">Completed Compressions</h2>
+
     @if ($completed_compressions->isEmpty())
         <div class="flex items-center space-x-2 p-4 bg-gray-100 rounded shadow">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
