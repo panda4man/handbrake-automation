@@ -61,7 +61,7 @@ class FileCompression extends Model
                 return null;
             }
 
-            return number_format(($this->file_size_after / $this->file_size_before) * 100, 2);
+            return number_format((($this->file_size_before - $this->file_size_after) / $this->file_size_before) * 100, 2);
         });
     }
 
