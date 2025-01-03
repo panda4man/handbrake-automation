@@ -38,7 +38,7 @@ class FetchHandbrakeStatus
 
             if (count($lines) > 1) {
                 // Extract the process details (excluding the header line)
-                $details = preg_split('/\s+/', $lines[1]);
+                $details = preg_split('/\s+/', trim($lines[1]));
 
                 $status_data['status'] = 'running';
                 $status_data['elapsed_time'] = $details[1];

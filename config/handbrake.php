@@ -31,7 +31,9 @@ return [
         ],
         // Map the HandBrakeCLI audio scan encoding to HandBrakeCLI audio encoding options
         'encode_mappings' => [
+            'AC3' => 'ac3',
             'DTS-HD MA' => 'dtshd',
+            'DTS' => 'dts',
             'E-AC3' => 'eac3',
             'DTS-HD' => 'dtshd',
             'AAC LC' => 'av_aac',

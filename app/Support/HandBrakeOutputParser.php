@@ -45,7 +45,7 @@ class HandBrakeOutputParser
             }
 
             // Parse audio tracks
-            if ($current_section === 'audio_tracks' && preg_match('/^\+ (\d+), (.+?) \((.+?), (.+?) ch(?:, \d+ kbps)?\) \(iso639-2: (.+?)\)$/', $line, $matches)) {
+            if ($current_section === 'audio_tracks' && preg_match('/^\+ (\d+), (.+?) \((.+?), (.+?) ch(?:, (.+?))?(?:, \d+ kbps)?\) \(iso639-2: (.+?)\)/', $line, $matches)) {
                 $audio_encoding = $matches[3];
 
                 if (!isset(config('handbrake.audio.encode_mappings')[$audio_encoding])) {
@@ -54,7 +54,7 @@ class HandBrakeOutputParser
 
                 $tracks['audio_tracks'][] = new AudioTrack(
                     audio_encoding: config('handbrake.audio.encode_mappings')[$audio_encoding],
-                    audio_language: $matches[5],
+                    audio_language: $matches[6],
                     track_number: (int) $matches[1],
                     audio_channel: $matches[4],
                     raw_description: $line
