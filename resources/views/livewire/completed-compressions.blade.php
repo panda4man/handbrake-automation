@@ -33,7 +33,7 @@
                                 {{ number_format($compression->file_size_after / 1024 / 1024, 2) }} MB
                             </td>
                             <td class="px-4 py-2 text-sm text-gray-800">
-                                {{ round(($compression->file_size_after / $compression->file_size_before) * 100, 2) }}%
+                                {{ round((abs($compression->file_size_before - $compression->file_size_after) / $compression->file_size_before) * 100, 2) }}%
                             </td>
                             <td class="px-4 py-2 text-sm text-gray-800">
                                 {{ $compression->completed_at->format('Y-m-d H:i:s') }}
