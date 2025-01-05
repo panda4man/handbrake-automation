@@ -20,13 +20,8 @@
             </div>
 
             <!-- Completed Compressions Column -->
-            <div class="col-span-1 bg-white rounded-lg shadow-md p-4">
-                <livewire:completed-compressions />
-            </div>
-
-            <!-- Failed Compressions Column -->
-            <div class="col-span-1 bg-white rounded-lg shadow-md p-4">
-                <livewire:failed-compressions />
+            <div class="col-span-2 bg-white rounded-lg shadow-md p-4">
+                <livewire:file-compression-output />
             </div>
         </div>
     </main>

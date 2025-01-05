@@ -27,7 +27,7 @@ return [
         'track_default' => 'eng',
         // Map the channel to the bitrate
         'channel_mapping' => [
-            '7.1' => 640, '5.1' => 640, '2.0' => 256
+            '7.1' => 640, '7.0' => 640, '5.1' => 640, '5.0' => 640, '2.0' => 256
         ],
         // Map the HandBrakeCLI audio scan encoding to HandBrakeCLI audio encoding options
         'encode_mappings' => [

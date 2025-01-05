@@ -16,7 +16,7 @@ class CompletedCompressions extends Component
 
     public function fetchCompletedCompressions(): void
     {
-        $this->completed_compressions = FileCompression::completed()->get();
+        $this->completed_compressions = FileCompression::completed()->orderByDesc('completed_at')->get();
     }
 
     public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
