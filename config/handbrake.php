@@ -27,7 +27,7 @@ return [
         'track_default' => 'eng',
         // Map the channel to the bitrate
         'channel_mapping' => [
-            '7.1' => 640, '7.0' => 640, '5.1' => 640, '5.0' => 640, '2.0' => 256
+            '7.1' => 640, '7.0' => 640, '6.1' => 640, '5.1' => 640, '5.0' => 640, '2.0' => 256
         ],
         // Map the HandBrakeCLI audio scan encoding to HandBrakeCLI audio encoding options
         'encode_mappings' => [
@@ -36,6 +36,7 @@ return [
             'DTS' => 'dts',
             'E-AC3' => 'eac3',
             'DTS-HD' => 'dtshd',
+            'DTS-ES' => 'dtshd',
             'AAC LC' => 'av_aac',
             'TrueHD' => 'truehd',
         ],
@@ -61,6 +62,7 @@ return [
         'bluray-standard-1080p' => 'Bluray-Standard-1080p',
         'bluray-anime-ghibli-1080p' => 'Bluray-Anime-Ghibli-1080p',
         'bluray-anime-action-1080p' => 'Bluray-Anime-Action-1080p',
-        'dvd-standard' => 'DVD-Standard'
+        'dvd-standard' => 'DVD-Standard',
+        'dvd-animated' => 'DVD-Animated'
     ],
 ];
