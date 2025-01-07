@@ -7,9 +7,9 @@
 
     <!-- Main Content -->
     <main class="flex-1 container mx-auto px-4 py-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Current Job Status Column -->
-            <div class="col-span-1 bg-white rounded-lg shadow-md p-4">
+            <div class="col-span-2 bg-white rounded-lg shadow-md p-4">
                 <h2 class="text-xl font-semibold mb-4">Current Job Status</h2>
                 <livewire:current-compression-status />
             </div>
@@ -20,7 +20,7 @@
             </div>
 
             <!-- Completed Compressions Column -->
-            <div class="col-span-2 bg-white rounded-lg shadow-md p-4">
+            <div class="col-span-3 bg-white rounded-lg shadow-md p-4">
                 <livewire:file-compression-output />
             </div>
         </div>
