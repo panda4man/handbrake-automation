@@ -145,6 +145,37 @@ class FileCompression extends Model
         });
     }
 
+    protected function cliArgs(): Attribute
+    {
+        return Attribute::get(function () {
+            $input_file = $this->input_file;
+            $output_file = $this->output_file;
+            $preset_json = config('handbrake.io.presets.use_json') ? $this->preset_file : null;
+
+            // Build the command array
+            $command = [
+                escapeshellcmd(config('handbrake.script')),
+                '-u', escapeshellarg(route('compression.update')),
+                '-j', escapeshellarg($this->id),
+                '-i', escapeshellarg($input_file),
+                '-o', escapeshellarg($output_file),
+                '--title', escapeshellarg($this->title) //this needs to be done in ffmpeg apparently.
+            ];
+
+            // Add preset args
+            if ($preset_json) {
+                $command[] = '--preset-import-file';
+                $command[] = escapeshellarg($preset_json);
+            }
+
+            $command[] = '-Z';
+            $command[] = escapeshellarg($this->preset);
+
+            // Append the CLI arguments for audio tracks
+            return array_merge($command, HandBrakeAudio::buildCLIArgs($this));
+        });
+    }
+
     /* --- Scopes --- */
 
     public function scopeCompleted(Builder $query): Builder
