@@ -25,32 +25,7 @@ class CompressFile
         ]);
 
         // Prepare paths and settings
-        $input_file = $file_compression->input_file;
-        $output_file = $file_compression->output_file;
-        $preset_json = config('handbrake.io.presets.use_json') ? $file_compression->preset_file : null;
-
-        // Build the command array
-        $command = [
-            escapeshellcmd(config('handbrake.script')),
-            '-u', escapeshellarg(route('compression.update')),
-            '-j', escapeshellarg($file_compression->id),
-            '-i', escapeshellarg($input_file),
-            '-o', escapeshellarg($output_file),
-            '--title', escapeshellarg($file_compression->title) //this needs to be done in ffmpeg apparently.
-        ];
-
-        // Add preset args
-        if ($preset_json) {
-            $command[] = '--preset-import-file';
-            $command[] = escapeshellarg($preset_json);
-        }
-
-        $command[] = '-Z';
-        $command[] = escapeshellarg($file_compression->preset);
-
-        // Append the CLI arguments for audio tracks
-        $command = array_merge($command, HandBrakeAudio::buildCLIArgs($file_compression));
-
+        $command = $file_compression->cli_args_array;
         $command[] = '> /dev/null 2>&1 &';
 
         // make sure that the parent directory for $file_compression->output_file exists

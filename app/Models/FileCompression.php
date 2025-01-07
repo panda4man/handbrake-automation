@@ -145,7 +145,7 @@ class FileCompression extends Model
         });
     }
 
-    protected function cliArgs(): Attribute
+    protected function cliArgsArray(): Attribute
     {
         return Attribute::get(function () {
             $input_file = $this->input_file;
