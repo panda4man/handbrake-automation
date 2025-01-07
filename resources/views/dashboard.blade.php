@@ -8,15 +8,32 @@
     <!-- Main Content -->
     <main class="flex-1 container mx-auto px-4 py-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Current Job Status Column -->
-            <div class="col-span-2 bg-white rounded-lg shadow-md p-4">
-                <h2 class="text-xl font-semibold mb-4">Current Job Status</h2>
-                <livewire:current-compression-status />
-            </div>
+            <div x-data="{ activeTab: 'current' }">
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                        <button
+                            @click="activeTab = 'current'"
+                            :class="activeTab === 'current' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                            class="px-4 py-2 font-medium text-sm border-b-2 focus:outline-none">
+                            Current Compressions
+                        </button>
 
-            <!-- Pending Compressions Column -->
-            <div class="col-span-1 bg-white rounded-lg shadow-md p-4">
-                <livewire:pending-compressions />
+                        <button
+                            @click="activeTab = 'pending'"
+                            :class="activeTab === 'pending' ? 'border-red-600 text-red-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
+                            class="px-4 py-2 font-medium text-sm border-b-2 focus:outline-none">
+                            Pending Compressions
+                        </button>
+                    </nav>
+                </div>
+
+                <div x-show="activeTab === 'current'" x-cloak class="mt-4">
+                    <livewire:current-compression-status />
+                </div>
+
+                <div x-show="activeTab === 'pending'" x-cloak class="mt-4">
+                    <livewire:pending-compressions />
+                </div>
             </div>
 
             <!-- Completed Compressions Column -->
