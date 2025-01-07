@@ -8,7 +8,7 @@
     <!-- Main Content -->
     <main class="flex-1 container mx-auto px-4 py-6">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="col-span-1 md:col-span-3" x-data="{ activeTab: 'current' }">
+            <div class="col-span-1 md:col-span-3 bg-white rounded-lg p-4" x-data="{ activeTab: 'current' }">
                 <div class="border-b border-gray-200">
                     <nav class="-mb-px flex space-x-4" aria-label="Tabs">
                         <button
