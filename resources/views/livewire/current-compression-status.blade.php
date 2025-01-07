@@ -1,6 +1,6 @@
 <div wire:poll.750ms="fetchCurrentCompression">
     @if ($current_status)
-        <div class="p-4 bg-blue-100 rounded shadow">
+        <div>
             <p><strong>File:</strong> {{ $active_compression['file_name'] ?? 'N/A' }}</p>
             <p><strong>Type:</strong> {{ $active_compression['file_type'] ?? 'N/A' }}</p>
             <p class="mt-4"><strong>Progress:</strong> {{ $current_status['progress'] ?? 'N/A' }}</p>
