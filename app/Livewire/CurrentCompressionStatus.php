@@ -49,15 +49,15 @@ class CurrentCompressionStatus extends Component
     private function parseCliCommand(string $cli_command): array
     {
         $arguments = [];
-        $pattern = '/(?:\s|^)(-[a-zA-Z]+|--[a-zA-Z-]+)(?:\s+\'(.*?)\'|\s+\"(.*?)\"|\s+([^\s]*))?/';
+        $pattern = '/(?:\s|^)(-[a-zA-Z]+|--[a-zA-Z-]+)(?:\s+\'(.*?)\'|\s+\"(.*?)\"|\s+([^\s-][^ ]*?)|\s+(\d[\d,]*))?/';
 
         preg_match_all($pattern, $cli_command, $matches, PREG_SET_ORDER);
 
         foreach ($matches as $match) {
             $key = $match[1]; // The flag (e.g., -u, --preset-import-file)
-            $value = $match[2] ?? $match[3] ?? $match[4] ?? null; // The corresponding value
+            $value = $match[2] ?? $match[3] ?? $match[4] ?? $match[5] ?? null; // Handle different cases for the value
 
-            // Handle multiple occurrences for some flags (e.g., --aname has multiple values)
+            // Handle multiple occurrences for some flags (e.g., --aencoder, --ab)
             if (isset($arguments[$key])) {
                 $arguments[$key] = (array) $arguments[$key];
                 $arguments[$key][] = $value;
@@ -68,4 +68,5 @@ class CurrentCompressionStatus extends Component
 
         return $arguments;
     }
+
 }
