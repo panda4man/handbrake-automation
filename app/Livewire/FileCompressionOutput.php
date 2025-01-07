@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\FileCompression;
 use Livewire\Component;
 
 class FileCompressionOutput extends Component
@@ -19,7 +20,8 @@ class FileCompressionOutput extends Component
         $this->total_space_saved = 0;
         $this->total_compression_time = 0;
 
-        foreach (\App\Models\FileCompression::completed()->get() as $compression) {
+        /** @var FileCompression $compression */
+        foreach (FileCompression::completed()->get() as $compression) {
             // Calculate space saved (original size - compressed size)
             $space_saved = $compression->file_size_before - $compression->file_size_after;
             $this->total_space_saved += max($space_saved, 0); // Ensure no negative values
@@ -36,4 +38,20 @@ class FileCompressionOutput extends Component
     {
         return view('livewire.file-compression-output');
     }
+
+    public function formatDuration($seconds)
+    {
+        $days = floor($seconds / 86400); // 1 day = 86400 seconds
+        $hours = floor(($seconds % 86400) / 3600); // Remaining hours
+        $minutes = floor(($seconds % 3600) / 60); // Remaining minutes
+        $seconds = $seconds % 60; // Remaining seconds
+
+        // Build a human-readable format
+        if ($days > 0) {
+            return sprintf('%d days %02d:%02d:%02d', $days, $hours, $minutes, $seconds);
+        }
+
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+    }
+
 }

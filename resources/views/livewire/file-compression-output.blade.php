@@ -11,7 +11,7 @@
             <div>
                 <p class="text-gray-600 text-sm">Total Compression Time</p>
                 <p class="text-xl font-bold text-blue-600">
-                    {{ gmdate('H:i:s', $total_compression_time) }}
+                    {{ $this->formatDuration($total_compression_time) }}
                 </p>
             </div>
         </div>
