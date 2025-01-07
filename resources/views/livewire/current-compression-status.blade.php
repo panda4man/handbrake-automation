@@ -9,7 +9,8 @@
             <p><strong>CPU Usage:</strong> {{ $current_status['cpu_usage'] ?? 'N/A' }}</p>
             <p><strong>Memory Usage:</strong> {{ $current_status['memory_usage'] ?? 'N/A' }}</p>
 
-            <div class="mt-4">
+            <div class="p-4 bg-gray-100 rounded shadow">
+                <h3 class="text-lg font-bold mb-2">Command Details</h3>
                 <div class="space-y-2">
                     @foreach ($parsed_args as $flag => $value)
                         <div class="flex">
