@@ -34,12 +34,12 @@ class FileCompressionOutput extends Component
         $this->total_space_saved = round($this->total_space_saved / (1024 ** 3), 2); // Convert bytes to GB and round to 2 decimals
     }
 
-    public function render()
+    public function render(): \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application
     {
         return view('livewire.file-compression-output');
     }
 
-    public function formatDuration($seconds)
+    public function formatDuration($seconds): string
     {
         $days = floor($seconds / 86400); // 1 day = 86400 seconds
         $hours = floor(($seconds % 86400) / 3600); // Remaining hours
