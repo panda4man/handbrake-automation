@@ -66,6 +66,8 @@ class CurrentCompressionStatus extends Component
             }
         }
 
+        info($arguments);
+
         return $arguments;
     }
 
