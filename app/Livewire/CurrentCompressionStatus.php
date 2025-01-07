@@ -45,9 +45,9 @@ class CurrentCompressionStatus extends Component
         ]);
     }
 
-    public function getCliArgsForDisplay()
+    public function getCliArgsForDisplay(): array
     {
-        $cli_args = $this->compression->cli_args_array;
+        $cli_args = $this->active_compression->cli_args_array ?? [];
 
         $parsed_args = [];
         $current_flag = null;
