@@ -10,26 +10,20 @@
             <p><strong>Memory Usage:</strong> {{ $current_status['memory_usage'] ?? 'N/A' }}</p>
 
             <div class="mt-4">
-                @if ($parsed_cli_command)
-                    <table class="table-auto border-collapse border border-gray-200 w-full">
-                        <thead>
-                        <tr>
-                            <th class="border border-gray-200 px-2 py-1 bg-gray-50 text-left">Argument</th>
-                            <th class="border border-gray-200 px-2 py-1 bg-gray-50 text-left">Value</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($parsed_cli_command as $key => $value)
-                            <tr>
-                                <td class="border border-gray-200 px-2 py-1 font-mono">{{ $key }}</td>
-                                <td class="border border-gray-200 px-2 py-1 font-mono">{{ is_array($value) ? implode(', ', $value) : $value }}</td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                    </table>
-                @else
-                    <p class="text-gray-600">No CLI command data available.</p>
-                @endif
+                <div class="space-y-2">
+                    @foreach ($parsed_args as $flag => $value)
+                        <div class="flex">
+                            <span class="font-medium text-gray-700">{{ $flag }}</span>
+                            <span class="ml-2">
+                                @if (is_array($value))
+                                    {{ implode(', ', $value) }}
+                                @else
+                                    {{ $value }}
+                                @endif
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     @else

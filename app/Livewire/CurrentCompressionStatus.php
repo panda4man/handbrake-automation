@@ -10,7 +10,6 @@ class CurrentCompressionStatus extends Component
 {
     public $current_status = [];
     public $active_compression = null;
-    public $parsed_cli_command;
 
     public function mount(): void
     {
@@ -23,7 +22,6 @@ class CurrentCompressionStatus extends Component
 
         if ($new_active_compression) {
             $this->active_compression = $new_active_compression;
-            $this->parsed_cli_command = $this->parseCliCommand($this->active_compression->cli_command);
             $this->updateCompressionStatus();
         } else {
             $this->active_compression = null;
@@ -43,32 +41,36 @@ class CurrentCompressionStatus extends Component
     {
         return view('livewire.current-compression-status', [
             'current_status' => $this->current_status,
+            'parsed_args' => $this->getCliArgsForDisplay(),
         ]);
     }
 
-    private function parseCliCommand(string $cli_command): array
+    public function getCliArgsForDisplay()
     {
-        $arguments = [];
-        $pattern = '/(?:\s|^)(-[a-zA-Z]+|--[a-zA-Z-]+)(?:\s+\'(.*?)\'|\s+\"(.*?)\"|\s+([^\s-][^ ]*?)|\s+(\d[\d,]*))?/';
+        $cli_args = $this->compression->cli_args_array;
 
-        preg_match_all($pattern, $cli_command, $matches, PREG_SET_ORDER);
+        $parsed_args = [];
+        $current_flag = null;
 
-        foreach ($matches as $match) {
-            $key = $match[1]; // The flag (e.g., -u, --preset-import-file)
-            $value = $match[2] ?? $match[3] ?? $match[4] ?? $match[5] ?? null; // Handle different cases for the value
-
-            // Handle multiple occurrences for some flags (e.g., --aencoder, --ab)
-            if (isset($arguments[$key])) {
-                $arguments[$key] = (array) $arguments[$key];
-                $arguments[$key][] = $value;
-            } else {
-                $arguments[$key] = $value;
+        foreach ($cli_args as $arg) {
+            if (str_starts_with($arg, '-') || str_starts_with($arg, '--')) {
+                // This is a flag, set it as the current key
+                $current_flag = $arg;
+                $parsed_args[$current_flag] = [];
+            } elseif ($current_flag) {
+                // This is a value for the last flag
+                $parsed_args[$current_flag][] = $arg;
             }
         }
 
-        info($arguments);
+        // Flatten single-item arrays for better readability
+        foreach ($parsed_args as $key => $values) {
+            if (count($values) === 1) {
+                $parsed_args[$key] = $values[0];
+            }
+        }
 
-        return $arguments;
+        return $parsed_args;
     }
 
 }
