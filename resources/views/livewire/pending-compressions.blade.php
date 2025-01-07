@@ -1,5 +1,5 @@
 <div wire:poll.3s="fetchPendingCompressions">
-    <div class="flex items-center justify-between">
+    <div class="pb-4">
         @if($pending_compressions->isNotEmpty())
             <button
                 class="rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
