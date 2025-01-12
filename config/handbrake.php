@@ -36,7 +36,7 @@ return [
             'DTS' => 'dts',
             'E-AC3' => 'eac3',
             'DTS-HD' => 'dtshd',
-            'DTS-ES' => 'dtshd',
+            'DTS-ES' => 'dts',
             'AAC LC' => 'av_aac',
             'TrueHD' => 'truehd',
         ],
@@ -63,6 +63,9 @@ return [
         'bluray-anime-ghibli-1080p' => 'Bluray-Anime-Ghibli-1080p',
         'bluray-anime-action-1080p' => 'Bluray-Anime-Action-1080p',
         'dvd-standard' => 'DVD-Standard',
-        'dvd-animated' => 'DVD-Animated'
+        'dvd-animated' => 'DVD-Animated',
+        'dvd-action' => 'DVD-Action',
+        'dvd-animated-stopmotion' => 'DVD-Animated-Stopmotion',
+        'dvd-animated-action' => 'DVD-Animated-Action'
     ],
 ];
