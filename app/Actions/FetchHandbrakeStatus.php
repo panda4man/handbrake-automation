@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\HandBrake\Data\CompressionInfo;
 use App\Models\FileCompression;
 use Illuminate\Support\Facades\Process;
 
@@ -10,40 +11,35 @@ class FetchHandbrakeStatus
     /**
      * Fetch the status of the HandBrake CLI process for a given FileCompression model.
      */
-    public function handle(FileCompression $file_compression): array
+    public function handle(FileCompression $file_compression): CompressionInfo
     {
-        if (! $file_compression->pid) {
-            return [
-                'status' => 'error',
+        if (!$file_compression->pid) {
+            return CompressionInfo::from([
+                'status' => FileCompression::STATUS_FAILED,
                 'message' => 'No PID available for this file compression job.',
-            ];
+            ]);
         }
 
-        $status_data = [
+        $status_data = CompressionInfo::from([
             'status' => 'not_running',
-            'pid' => $file_compression->pid,
-            'elapsed_time' => null,
-            'cpu_usage' => null,
-            'memory_usage' => null,
-            'progress' => null,
-            'eta' => null,
-        ];
+            'pid' => $file_compression->pid
+        ]);
 
         // Check if the process is running using `ps`
         $process = Process::run("ps -p {$file_compression->pid} -o pid,etime,%cpu,%mem");
 
-        if ($process->successful() && str_contains($process->output(), (string) $file_compression->pid)) {
+        if ($process->successful() && str_contains($process->output(), (string)$file_compression->pid)) {
             $output = $process->output();
-            $lines = explode("\n", trim($output));
+            $lines  = explode("\n", trim($output));
 
             if (count($lines) > 1) {
                 // Extract the process details (excluding the header line)
                 $details = preg_split('/\s+/', trim($lines[1]));
 
-                $status_data['status'] = 'running';
-                $status_data['elapsed_time'] = $details[1];
-                $status_data['cpu_usage'] = $details[2].'%';
-                $status_data['memory_usage'] = $details[3].'%';
+                $status_data->status       = FileCompression::STATUS_RUNNING;
+                $status_data->elapsed_time = $details[1];
+                $status_data->cpu_usage    = $details[2] . '%';
+                $status_data->memory_usage = $details[3] . '%';
             }
         }
 
@@ -67,8 +63,8 @@ class FetchHandbrakeStatus
 
             // Extract progress and ETA using regex
             if (preg_match('/Encoding:.*?([0-9]+\.[0-9]+) %.*ETA ([0-9hms]+)/', $last_line, $matches)) {
-                $status_data['progress'] = $matches[1] . '%';
-                $status_data['eta'] = $matches[2];
+                $status_data->progress = $matches[1] . '%';
+                $status_data->eta      = $matches[2];
             }
         }
 

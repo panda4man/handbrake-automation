@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Storage;
 
 class FileCompression extends Model
 {
+    const STATUS_RUNNING = 'running';
+    const STATUS_COMPLETED = 'success';
+    const STATUS_FAILED = 'failed';
+
     protected $guarded = [];
 
     protected $casts = [
@@ -177,6 +181,11 @@ class FileCompression extends Model
     }
 
     /* --- Scopes --- */
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('active', true);
+    }
 
     public function scopeCompleted(Builder $query): Builder
     {

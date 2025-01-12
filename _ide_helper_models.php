@@ -34,6 +34,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read mixed $clean_file_name
+ * @property-read mixed $cli_args_array
  * @property-read mixed $compression_ratio
  * @property-read mixed $input_file
  * @property-read mixed $log_file
@@ -44,6 +45,7 @@ namespace App\Models{
  * @property-read mixed $requested_audio_tracks
  * @property-read mixed $requests_audio_tracks
  * @property-read mixed $title
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression active()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression completed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression failed()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|FileCompression newModelQuery()
