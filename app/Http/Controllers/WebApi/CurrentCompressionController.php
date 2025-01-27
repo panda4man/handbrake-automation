@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\WebApi;
 
 use App\Http\Controllers\Controller;
 use App\Models\FileCompression;
@@ -18,6 +18,6 @@ class CurrentCompressionController extends Controller
             ], 404);
         }
 
-        return \App\Http\Resources\FileCompression::make($current);
+        return \App\Http\Resources\FileCompression::make($current)->current();
     }
 }
