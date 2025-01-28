@@ -52,6 +52,11 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <!-- Pagination Links -->
+        <div class="mt-4">
+            {{ $completed_compressions->links('pagination::tailwind') }}
+        </div>
         </div>
     @endif
 
